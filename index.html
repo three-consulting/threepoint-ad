@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Minimal shader</title>
+    <link rel="stylesheet" href="./style.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@600&display=swap"
+      rel="stylesheet"
+    />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <script src="shader-web-background.min.js"></script>
+    <script type="x-shader/x-fragment" id="image">
+            precision highp float;
+
+            uniform float iTime;
+            uniform float iScrollTop;
+            uniform vec2 iResolution;
+
+          #define breakpoint 2.4
+          #define breakpointTwo 4.5
+
+      float field(in vec2 uv, in float speed, in float size){
+        uv.y -= .01*speed*iScrollTop;
+        vec2 gv = fract(uv/size)-.5;
+
+        vec2 id = floor(uv/size);
+        float s = 1.;
+
+        float d = length(gv);
+        float a =  1.5*min(.25 * iScrollTop, 0.4);
+        float b = min(max(iScrollTop-breakpoint, 0.), 1.2);
+        float c = sqrt(min(max(iScrollTop-breakpointTwo, 0.), 4.));
+
+        return (a + b - c) * max(s * .05 / d, 0.15);
+      }
+
+      vec4 shading(in float amp, in vec2 uv){
+        float t = amp - .5;
+        vec2 a = gl_FragCoord.xy * uv;
+        vec4 col = vec4(.2, .74, 1., 1.);
+        return t * col;
+      }
+
+      void main(){
+        vec2 uv = (gl_FragCoord.xy - iResolution.xy )/ iResolution.y;
+        float t = .1*iTime + .5*iScrollTop;
+        float s = max(iScrollTop-breakpoint, 0.);
+        float c = min(pow(s, 3.), 1.2);
+        for (float i = 2.0; i < 5.0; i++)
+        {
+            uv.x += c*2.*0.4 / i * cos(i * 2.0 * uv.y + t) * cos(i * 1.5 * uv.y + t);
+            uv.y += c*2.*0.4 / i * cos(i * 2.0 * uv.x + t);
+        }
+        vec4 col = vec4(0);
+        uv = 5. * uv;
+        c = c - min(max(iScrollTop-breakpointTwo, 0.), 1.2);
+
+        float field1 = field(uv, .25, .5);
+        float field2 = field(uv, 30., 1.);
+        float field3 = field(uv, 30., 2.);
+        float amp = field1 + field2 + field3;
+        col.r = shading(amp, uv).r;
+
+        vec2 dx = c*vec2(.05);
+        field1 = field(uv-dx, .25, .5);
+        field2 = field(uv-dx, 30., 1.);
+        field3 = field(uv-dx, 30., 2.);
+        amp = field1 + field2 + field3;
+        col.g = shading(amp, uv).g;
+
+        dx = c*vec2(.025);
+        field1 = field(uv-dx, .25, .5);
+        field2 = field(uv-dx, 30., 1.);
+        field3 = field(uv-dx, 30., 2.);
+        amp = field1 + field2 + field3;
+        col.b = shading(amp, uv).b;
+
+        gl_FragColor = col;
+      }
+    </script>
+    <script>
+      shaderWebBackground.shade({
+        shaders: {
+          image: {
+            uniforms: {
+              iTime: (gl, loc) => gl.uniform1f(loc, performance.now() / 1000),
+              iScrollTop: (gl, loc) =>
+                gl.uniform1f(loc, window.scrollY / window.innerHeight),
+              iResolution: (gl, loc) => {
+                const rect = document
+                  .getElementById("demo")
+                  .getBoundingClientRect();
+                return gl.uniform2f(
+                  loc,
+                  window.screen.width,
+                  window.screen.height
+                );
+              },
+            },
+          },
+        },
+      });
+    </script>
+    <style>
+      .shader-web-background-fallback {
+        background: black;
+        background-position: center;
+        background-size: cover;
+        background-attachment: fixed;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="demo">
+      <div id="title">
+        <h2>Hey there!</h2>
+        <h2>We are <a href="https://three.consulting">three.consulting</a></h2>
+        <h2>A software consultancy, based in Helsinki and Turku, Finland</h2>
+      </div>
+      <div id="slogan">
+        <h2 class="highlight">I wanna show you a magic trick.</h2>
+        <h2>
+          These orbs might look like your run-of-the-mill bitmap sprites...
+        </h2>
+        <h2>... but watch this:</h2>
+      </div>
+      <div id="tada">
+        <h2>✨Ta-da✨</h2>
+      </div>
+      <div id="pitch">
+        <h2>
+          We write software for a living and for fun, and we are looking for new
+          friends to work with. If you wanna join our squad, say hello at
+          info@three.consulting. Find our current team on our
+          <a href="https://three.consulting">site</a> and some random content on
+          <a href="https://www.instagram.com/three.consulting/">Instagram</a>.
+        </h2>
+        <h3>
+          (If you just want to hang out, that's cool too. We're looking forward
+          to arranging all kinds of events in the post-COVID future.)
+        </h3>
+      </div>
+      <div id="footer">
+        <p>
+          No innocent GPUs were harmed in the making of this shader. Mad props
+          to <a href="https://github.com/xemantic">xemantic</a> for making the
+          <a href="https://github.com/xemantic/shader-web-background"
+            >shader-web-background</a
+          >, i.e. access to WebGL shaders for humans. Also the insanely talented
+          folks at <a href="https://www.shadertoy.com/">shadertoy</a> for
+          inspiration.
+        </p>
+      </div>
+    </div>
+  </body>
+</html>

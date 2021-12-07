@@ -1,0 +1,55 @@
+#title {
+  margin: auto 0;
+  top: 40vh;
+  position: absolute;
+  left: 50vw;
+  transform: translatex(-50%) translatey(-50%);
+  color: white;
+}
+
+h2 {
+  font-weight: 400;
+}
+
+#slogan {
+  margin: auto 0;
+  top: 240vh;
+  position: absolute;
+  left: 50vw;
+  transform: translatex(-50%) translatey(-50%);
+}
+
+#tada {
+  margin: auto 0;
+  top: 500vh;
+  position: absolute;
+  left: 50vw;
+  transform: translatex(-50%) translatey(-50%);
+}
+
+#pitch {
+  margin: auto 0;
+  top: 700vh;
+  position: absolute;
+  left: 50vw;
+  transform: translatex(-50%) translatey(-50%);
+}
+
+#footer {
+  margin: auto 0;
+  top: 900vh;
+  position: absolute;
+  left: 50vw;
+  transform: translatex(-50%) translatey(-50%);
+}
+
+#demo {
+  height: 1000vh;
+  color: white;
+  font-weight: 600;
+  font-family: "Nunito Sans", sans-serif;
+}
+
+.highlight {
+  color: rgb(255, 0, 0);
+}
