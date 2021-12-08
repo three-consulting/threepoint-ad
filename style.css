@@ -1,3 +1,8 @@
+@font-face {
+    font-family: "Roboto";
+    src: url("font.woff2") format('woff2');
+}
+
 #title {
   margin: auto 0;
   top: 40vh;
@@ -47,7 +52,7 @@ h2 {
   height: 1000vh;
   color: white;
   font-weight: 600;
-  font-family: "Nunito Sans", sans-serif;
+  font-family: 'Roboto', sans-serif;
 }
 
 .highlight {
