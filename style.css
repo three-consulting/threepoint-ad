@@ -1,8 +1,3 @@
-@font-face {
-  font-family: "Roboto";
-  src: url("font.woff2") format("woff2");
-}
-
 #title {
   margin: auto 0;
   top: 40vh;
@@ -12,8 +7,13 @@
   color: white;
 }
 
-h2 {
+h2, h3 {
   background: black;
+  font-weight: 200;
+}
+
+a {
+  color: #ffa400;
 }
 
 #slogan {
@@ -51,8 +51,9 @@ h2 {
 #demo {
   height: 1000vh;
   color: white;
-  font-weight: 600;
-  font-family: "Roboto", sans-serif;
+  font-family: sans-serif;
+  line-height: 2em;
+  letter-spacing: 0.1em;
 }
 
 .highlight {
